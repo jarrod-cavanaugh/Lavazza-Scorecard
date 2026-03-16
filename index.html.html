@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lavazza — Luminize Brand Intelligence Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0e1420;
+  color: #e2e8f0;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-width: 1100px;
+}
+.header { background: #0e1420; padding: 28px 40px 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+.report-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #22d3ee; margin-bottom: 6px; }
+.brand-name { font-size: 52px; font-weight: 900; line-height: 1; letter-spacing: -1px; margin-bottom: 8px; }
+.brand-meta { font-size: 13px; color: #94a3b8; }
+.res-card { background: #1a2235; border: 1px solid #2d3a52; border-radius: 8px; padding: 16px 24px; text-align: center; min-width: 220px; }
+.res-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
+.res-score { font-size: 52px; font-weight: 900; color: #22d3ee; line-height: 1; letter-spacing: -2px; }
+.res-score .denom { font-size: 22px; color: #64748b; font-weight: 600; letter-spacing: 0; }
+.res-verdict { font-size: 12px; font-weight: 700; color: #f59e0b; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 6px; }
+.data-pulled { font-size: 11px; color: #475569; margin-top: 10px; text-align: right; }
+
+.kpi-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 40px 20px; }
+.kpi-card { background: #131c2e; border: 1px solid #1e2d45; border-radius: 8px; padding: 18px 20px; position: relative; overflow: hidden; }
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.kpi-teal::before   { background: #22d3ee; }
+.kpi-purple::before { background: #a855f7; }
+.kpi-yellow::before { background: #f59e0b; }
+.kpi-red::before    { background: #f43f5e; }
+.kpi-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; margin-bottom: 8px; }
+.kpi-value { font-size: 34px; font-weight: 800; color: #f1f5f9; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+.kpi-sub { font-size: 12px; color: #64748b; }
+.kpi-delta { font-size: 12px; font-weight: 600; margin-top: 3px; }
+.dg { color: #4ade80; } .dr { color: #f43f5e; } .dy { color: #f59e0b; } .dt { color: #22d3ee; }
+
+.flywheel-label { padding: 0 40px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #475569; }
+.flywheel-label .dot { color: #334155; margin: 0 5px; }
+
+.quadrant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 40px 12px; }
+.q-card { background: #131c2e; border: 1px solid #1e2d45; border-radius: 10px; padding: 24px 26px; position: relative; overflow: hidden; }
+.q-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
+.qt::before { background: #22d3ee; }
+.qr::before { background: #f43f5e; }
+.qg::before { background: #4ade80; }
+.qy::before { background: #f59e0b; }
+.qb::before { background: #a855f7; }
+
+.q-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+.q-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.qt .q-eyebrow { color: #22d3ee; }
+.qr .q-eyebrow { color: #f43f5e; }
+.qg .q-eyebrow { color: #4ade80; }
+.qy .q-eyebrow { color: #f59e0b; }
+.qb .q-eyebrow { color: #a855f7; }
+.q-title { font-size: 30px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.5px; line-height: 1; margin-bottom: 4px; }
+.q-subtitle { font-size: 12px; color: #475569; font-style: italic; }
+.q-score { text-align: right; }
+.q-score-num { font-size: 52px; font-weight: 900; line-height: 1; letter-spacing: -2px; }
+.qt .q-score-num { color: #22d3ee; }
+.qr .q-score-num { color: #f43f5e; }
+.qg .q-score-num { color: #4ade80; }
+.qy .q-score-num { color: #f59e0b; }
+.qb .q-score-num { color: #a855f7; }
+.q-score-denom { font-size: 16px; color: #475569; font-weight: 600; display: block; text-align: right; margin-top: -4px; }
+.q-score-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-align: right; margin-top: 3px; }
+.qt .q-score-label { color: #22d3ee; }
+.qr .q-score-label { color: #f43f5e; }
+.qg .q-score-label { color: #4ade80; }
+.qy .q-score-label { color: #f59e0b; }
+.qb .q-score-label { color: #a855f7; }
+
+.metric-rows { display: flex; flex-direction: column; margin-bottom: 20px; border-top: 1px solid #1e2d45; }
+.metric-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #1e2d45; }
+.metric-label { font-size: 12px; font-weight: 500; color: #cbd5e1; width: 220px; flex-shrink: 0; }
+.metric-bar-wrap { flex: 1; height: 7px; background: #1a2538; border-radius: 4px; overflow: hidden; }
+.metric-bar { height: 100%; border-radius: 4px; }
+.bt { background: #22d3ee; } .bg { background: #4ade80; } .by { background: #f59e0b; }
+.br { background: #f43f5e; } .bo { background: #fb923c; } .bp { background: #a855f7; }
+.metric-value { font-size: 13px; font-weight: 700; width: 110px; text-align: right; flex-shrink: 0; }
+.vt { color: #22d3ee; } .vg { color: #4ade80; } .vy { color: #f59e0b; }
+.vr { color: #f43f5e; } .vo { color: #fb923c; } .vw { color: #f1f5f9; } .vp { color: #a855f7; }
+
+.q-blurb { background: #0e1420; border: 1px solid #1e2d45; border-radius: 6px; padding: 14px 16px; font-size: 12.5px; color: #94a3b8; line-height: 1.65; }
+.q-blurb strong { color: #e2e8f0; font-weight: 600; }
+.q-blurb .ct { color: #22d3ee; font-weight: 600; }
+.q-blurb .cg { color: #4ade80; font-weight: 600; }
+.q-blurb .cy { color: #f59e0b; font-weight: 600; }
+.q-blurb .cr { color: #f43f5e; font-weight: 600; }
+
+.gap-banner { margin: 0 40px 12px; background: #131c2e; border: 1px solid #2d3a52; border-radius: 10px; padding: 28px 36px; display: flex; align-items: center; justify-content: space-between; gap: 40px; position: relative; overflow: hidden; }
+.gap-banner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #a855f7, #22d3ee); }
+.gap-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #a855f7; margin-bottom: 10px; }
+.gap-headline { font-size: 22px; font-weight: 800; color: #f1f5f9; margin-bottom: 12px; line-height: 1.3; }
+.gap-headline .hlt { color: #22d3ee; }
+.gap-body { font-size: 13px; color: #64748b; max-width: 620px; line-height: 1.65; }
+.gap-body .hl { color: #22d3ee; font-weight: 600; }
+.gap-right { text-align: right; flex-shrink: 0; }
+.gap-amount { font-size: 52px; font-weight: 900; color: #22d3ee; letter-spacing: -2px; line-height: 1; }
+.gap-amount-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #475569; margin-top: 4px; }
+
+.footer { padding: 28px 40px 24px; display: flex; align-items: center; justify-content: space-between; background: #0e1420; }
+.logo { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
+.logo .lumi { color: #ffffff; }
+.logo .nize { color: #7c3aed; }
+.footer-tagline { font-size: 11px; color: #475569; margin-top: 3px; font-style: italic; }
+.footer-formula { font-size: 12px; color: #64748b; text-align: center; }
+.footer-formula strong { color: #94a3b8; font-weight: 600; }
+.footer-sub { font-size: 10px; color: #334155; margin-top: 4px; font-style: italic; text-align: center; }
+.cta-btn { background: #7c3aed; color: #fff; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; padding: 14px 30px; border-radius: 6px; text-decoration: none; display: inline-block; text-transform: uppercase; }
+.footer-date { font-size: 11px; color: #334155; margin-top: 6px; text-align: right; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="report-eyebrow">Luminize Brand Intelligence Report</div>
+    <div class="brand-name"><span style="background: linear-gradient(90deg, #a855f7, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Lavazza</span></div>
+    <div class="brand-meta">Food &amp; Beverage &nbsp;·&nbsp; Coffee Beans, Ground Coffee &amp; Espresso &nbsp;·&nbsp; 240 ASINs ($1K+/mo)</div>
+  </div>
+  <div>
+    <div class="res-card">
+      <div class="res-label">Revenue Efficiency Score</div>
+      <div class="res-score">6.1<span class="denom">/10</span></div>
+      <div class="res-verdict">⚡ Needs Work</div>
+    </div>
+    <div class="data-pulled">Data pulled: Mar 16, 2026 &nbsp;·&nbsp; SmartScout + Keepa + H10</div>
+  </div>
+</div>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi-card kpi-teal">
+    <div class="kpi-label">Est. Annual Revenue</div>
+    <div class="kpi-value">$147.5M</div>
+    <div class="kpi-sub">Trailing 12 months</div>
+    <div class="kpi-delta dg">↑ 37.4% YoY growth</div>
+  </div>
+  <div class="kpi-card kpi-purple">
+    <div class="kpi-label">Monthly Run Rate</div>
+    <div class="kpi-value">$13.0M</div>
+    <div class="kpi-sub">Jan 2026 estimate</div>
+    <div class="kpi-delta dr">↓ 42.6% MoM (post-holiday)</div>
+  </div>
+  <div class="kpi-card kpi-yellow">
+    <div class="kpi-label">Avg. In-Stock Rate</div>
+    <div class="kpi-value">87.9%</div>
+    <div class="kpi-sub">Across 240 ASINs ($1K+/mo)</div>
+    <div class="kpi-delta dy">~ Slightly below category avg</div>
+  </div>
+  <div class="kpi-card kpi-red">
+    <div class="kpi-label">Buy Box – Amazon Win%</div>
+    <div class="kpi-value">71.4%</div>
+    <div class="kpi-sub">Amazon.com (1P dominant)</div>
+    <div class="kpi-delta dr">↓ Italy Best Coffee 17% share</div>
+  </div>
+</div>
+
+<!-- FLYWHEEL LABEL -->
+<div class="flywheel-label">
+  Amazon Flywheel Scorecard <span class="dot">·</span> Sessions <span class="dot">×</span> Buy Box % <span class="dot">×</span> Conversion <span class="dot">×</span> AOV <span class="dot">=</span> Revenue
+</div>
+
+<!-- QUADRANT GRID -->
+<div class="quadrant-grid">
+
+  <!-- Q1 SESSIONS -->
+  <div class="q-card qt">
+    <div class="q-top">
+      <div>
+        <div class="q-eyebrow">01 · Flywheel Entry</div>
+        <div class="q-title">SESSIONS</div>
+        <div class="q-subtitle">Are enough shoppers finding Lavazza? <span style="color:#334155;font-size:11px;">· Brand-level data</span></div>
+      </div>
+      <div class="q-score">
+        <div class="q-score-num">6.0</div>
+        <div class="q-score-denom">/10</div>
+        <div class="q-score-label">Moderate</div>
+      </div>
+    </div>
+    <div class="metric-rows">
+      <div class="metric-row">
+        <div class="metric-label">Branded Search Volume (Top Terms)</div>
+        <div class="metric-bar-wrap"><div class="metric-bar bt" style="width:85%"></div></div>
+        <div class="metric-value vt">543K+/mo</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Non-branded Category Reach</div>
+        <div class="metric-bar-wrap"><div class="metric-bar by" style="width:15%"></div></div>
+        <div class="metric-value vy">Low</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">SP #1 Win Rate (Non-branded)</div>
+        <div class="metric-bar-wrap"><div class="metric-bar br" style="width:3%"></div></div>
+        <div class="metric-value vr">&lt;2%</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Subcategory Presence</div>
+        <div class="metric-bar-wrap"><div class="metric-bar bt" style="width:60%"></div></div>
+        <div class="metric-value vt">9 subcats</div>
+      </div>
+    </div>
+    <div class="q-blurb">
+      <strong>Massive branded awareness, invisible on category terms.</strong> "Lavazza" branded terms drive 543K+ searches/month and total ad spend is $437K/mo — significant investment. But on "coffee" (413K/mo), the organic position is 84 and SP #1 win rate is under 2%. Hero ASIN ranks #1 for "lock box" equivalent — but the broader coffee category is dominated by competitors. <strong>Ad spend is high but targeted at the wrong terms.</strong>
+    </div>
+  </div>
+
+  <!-- Q2 BUY BOX -->
+  <div class="q-card qy">
+    <div class="q-top">
+      <div>
+        <div class="q-eyebrow">02 · Flywheel Friction</div>
+        <div class="q-title">BUY BOX</div>
+        <div class="q-subtitle">Is Lavazza capturing the sale when shoppers arrive?</div>
+      </div>
+      <div class="q-score">
+        <div class="q-score-num">5.5</div>
+        <div class="q-score-denom">/10</div>
+        <div class="q-score-label">Concerning</div>
+      </div>
+    </div>
+    <div class="metric-rows">
+      <div class="metric-row">
+        <div class="metric-label">Amazon Buy Box Win Rate (90d)</div>
+        <div class="metric-bar-wrap"><div class="metric-bar bg" style="width:75%"></div></div>
+        <div class="metric-value vg">75.2%</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Amazon Holds BB Currently</div>
+        <div class="metric-bar-wrap"><div class="metric-bar bg" style="width:43%"></div></div>
+        <div class="metric-value vg">104 of 240</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">ASINs with 2+ Competing Sellers</div>
+        <div class="metric-bar-wrap"><div class="metric-bar by" style="width:80%"></div></div>
+        <div class="metric-value vy">193 of 240</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">ASINs with 3+ Competing Sellers</div>
+        <div class="metric-bar-wrap"><div class="metric-bar br" style="width:59%"></div></div>
+        <div class="metric-value vr">142 of 240</div>
+      </div>
+    </div>
+    <div class="q-blurb">
+      <strong>3P leakage is a growing structural risk.</strong> Italy Best Coffee holds 17% of brand revenue ($1.77M/mo) and currently controls the buy box on 38 ASINs — making them effectively a shadow distributor at scale. Coffee Shop US adds another 3.8%. With 75 total sellers and 142 ASINs having 3+ competing sellers, <strong>Lavazza is losing margin and pricing control on over half its active catalog.</strong>
+    </div>
+  </div>
+
+  <!-- Q3 CONVERSION -->
+  <div class="q-card qg">
+    <div class="q-top">
+      <div>
+        <div class="q-eyebrow">03 · Flywheel Accelerant</div>
+        <div class="q-title">CONVERSION</div>
+        <div class="q-subtitle">Are listings converting browsers to buyers?</div>
+      </div>
+      <div class="q-score">
+        <div class="q-score-num">6.5</div>
+        <div class="q-score-denom">/10</div>
+        <div class="q-score-label">Good</div>
+      </div>
+    </div>
+    <div class="metric-rows">
+      <div class="metric-row">
+        <div class="metric-label">Average Star Rating</div>
+        <div class="metric-bar-wrap"><div class="metric-bar bg" style="width:90%"></div></div>
+        <div class="metric-value vg">4.49 ★</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Total Review Count (catalog)</div>
+        <div class="metric-bar-wrap"><div class="metric-bar bg" style="width:70%"></div></div>
+        <div class="metric-value vg">772K+</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Hero ASIN Reviews (Super Crema)</div>
+        <div class="metric-bar-wrap"><div class="metric-bar bt" style="width:48%"></div></div>
+        <div class="metric-value vt">39,951</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">ASINs with Active Coupons</div>
+        <div class="metric-bar-wrap"><div class="metric-bar br" style="width:2%"></div></div>
+        <div class="metric-value vr">0 of 240</div>
+      </div>
+    </div>
+    <div class="q-blurb">
+      <strong>Conversion fundamentals are strong.</strong> 4.49★ across 240 active ASINs and 772K+ reviews signal deep category trust. The hero ASIN — Lavazza Super Crema — drives $1.95M/mo on 39,951 reviews alone. <strong>The gap: zero active coupons across 240 ASINs</strong> in a high-repeat-purchase category where a Subscribe &amp; Save push could meaningfully lock in recurring revenue and accelerate flywheel velocity.
+    </div>
+  </div>
+
+  <!-- Q4 AOV & AVAILABILITY -->
+  <div class="q-card qy">
+    <div class="q-top">
+      <div>
+        <div class="q-eyebrow">04 · Flywheel Multiplier</div>
+        <div class="q-title">AOV &amp; AVAILABILITY</div>
+        <div class="q-subtitle">Is Lavazza maximizing every transaction?</div>
+      </div>
+      <div class="q-score">
+        <div class="q-score-num">6.5</div>
+        <div class="q-score-denom">/10</div>
+        <div class="q-score-label">Moderate</div>
+      </div>
+    </div>
+    <div class="metric-rows">
+      <div class="metric-row">
+        <div class="metric-label">Avg. In-Stock Rate (catalog)</div>
+        <div class="metric-bar-wrap"><div class="metric-bar by" style="width:88%"></div></div>
+        <div class="metric-value vy">87.9%</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">ASINs OOS &gt;30% of 90 days</div>
+        <div class="metric-bar-wrap"><div class="metric-bar by" style="width:12%"></div></div>
+        <div class="metric-value vy">29 of 240</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Avg Selling Price (current)</div>
+        <div class="metric-bar-wrap"><div class="metric-bar bg" style="width:58%"></div></div>
+        <div class="metric-value vg">$45.81</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Price Stability (90d BB drop)</div>
+        <div class="metric-bar-wrap"><div class="metric-bar by" style="width:55%"></div></div>
+        <div class="metric-value vy">Moderate</div>
+      </div>
+    </div>
+    <div class="q-blurb">
+      <strong>Solid AOV but inventory needs tightening.</strong> At $45.81 avg price, Lavazza commands strong per-unit economics. However, 87.9% in-stock is slightly below category average and 29 core ASINs are OOS more than 30% of the past 90 days — a meaningful drag at this revenue scale. <strong>Each OOS day on the hero ASIN ($1.95M/mo) costs approximately $65K in lost revenue.</strong>
+    </div>
+  </div>
+
+</div>
+
+<!-- REVENUE GAP BANNER -->
+<div class="gap-banner">
+  <div>
+    <div class="gap-eyebrow">Revenue Gap Analysis</div>
+    <div class="gap-headline">
+      Lavazza is a $147M brand with a <span class="hlt">3P seller and inventory problem at scale.</span>
+    </div>
+    <div class="gap-body">
+      Italy Best Coffee alone captures $1.77M/mo in Lavazza revenue — an unauthorized 3P account operating as a shadow distributor. Combined with 29 chronically OOS core ASINs and a 12.1% avg buy box gap, the catalog is leaking at every point. Reclaiming buy box control on key ASINs and fixing the 29 OOS SKUs represents an estimated <span class="hl">$15.2M in recoverable annual revenue</span> — without launching a single new product.
+    </div>
+  </div>
+  <div class="gap-right">
+    <div class="gap-amount">$15.2M</div>
+    <div class="gap-amount-label">Est. Recoverable<br>Annual Revenue</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>
+    <div class="logo"><span class="lumi">LUMIN</span><span class="nize">IZE</span></div>
+    <div class="footer-tagline">Amazon is not your friend. We are.</div>
+  </div>
+  <div>
+    <div class="footer-formula">Revenue = <strong>Sessions</strong> × <strong>Buy Box %</strong> × <strong>Conversion Rate</strong> × <strong>AOV</strong></div>
+    <div class="footer-sub">Scored across Traffic · Buy Box Control · Listing Quality · Inventory Health</div>
+  </div>
+  <div style="text-align:right">
+    <a href="#" class="cta-btn">Speak With a Friend →</a>
+    <div class="footer-date">luminize.co &nbsp;·&nbsp; Mar 2026</div>
+  </div>
+</div>
+
+</body>
+</html>
